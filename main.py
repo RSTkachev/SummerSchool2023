@@ -1,8 +1,8 @@
 import torch
 import tkinter as tk
-from tkinter import ttk, Canvas, PhotoImage
+from tkinter import ttk
 from tkinter import filedialog as fd
-from PIL import Image, ImageTk
+from tkVideoPlayer import TkinterVideo
 import os
 
 
@@ -16,8 +16,8 @@ root.iconbitmap('icon.ico')
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
-window_width = int(screen_width / 2)
-window_height = int(screen_height / 2)
+window_width = int(screen_width / 1.6)
+window_height = int(screen_height / 1.6)
 
 # find the center point
 center_x = int(screen_width / 2 - window_width / 2)
@@ -26,53 +26,55 @@ center_y = int(screen_height / 2 - window_height / 2)
 # set the position of the window to the center of the screen
 root.geometry(f'{window_width}x{window_height}+{center_x}+{center_y}')
 
-panel = tk.Label(root)
-
-
-
-# Model
-model = torch.hub.load("yolov5", "yolov5x6", source="local")  # or yolov5n - yolov5x6, custom
+vid_player = TkinterVideo(root)
 
 
 def LoadFile():
     file_name = fd.askopenfilename()
     return file_name
 
-def ProcessImage():
-    global panel
-    panel.destroy()
-    panel = tk.Label(root)
-    panel.addr = LoadFile()
-    panel.im = Image.open(panel.addr)
+def Process():
+    global vid_player
+    vid_player.destroy()
+    vid_player = TkinterVideo(root)
+    vid_player.addr = LoadFile()
 
-    # Inference
-    results = model(panel.im)
+    action = 'python yolov5/detect.py --weights yolov5/kek.pt --source %s' % vid_player.addr
 
-    # Results
-    results.save()
+    # Detect
+    os.system(action)
 
     #Get file name
-    panel.filename = os.path.basename(panel.addr)
-    panel.filename = os.path.splitext(panel.filename)[0]
+    vid_player.filename = os.path.basename(vid_player.addr)
+    vid_player.filename = os.path.splitext(vid_player.filename)[0]
 
-    #Find the path to the processed image
+    #Find the path to the processed video
     roots = list()
-    for i in os.walk('runs/detect/', topdown=False):
+    for i in os.walk('yolov5/runs/detect/', topdown=False):
         roots.append(i)
-    panel.addr = '%s%s%s%s' % (roots[-2][0], "/", panel.filename, ".jpg")
+    vid_player.addr = '%s%s%s%s' % (roots[-2][0], "/", vid_player.filename, ".mp4")
 
-    #Display an image
-    panel.im = Image.open(panel.addr)
-    panel.im = panel.im.resize((window_width - 50, window_height - 50), Image.Resampling.LANCZOS)
-    panel.image = ImageTk.PhotoImage(panel.im)
-    panel['image'] = panel.image
-    panel.pack()
+    #Display a video
+    vid_player.load(vid_player.addr)
+    vid_player.pack(expand=True, fill="both")
+    play_pause_btn["text"] = "Play"
+
+def play_pause():
+    """ pauses and plays """
+    if vid_player.is_paused():
+        vid_player.play()
+        play_pause_btn["text"] = "Pause"
+
+    else:
+        vid_player.pause()
+        play_pause_btn["text"] = "Play"
 
 
-loadButton = ttk.Button(root,
-                        text='Download file',
-                        command=lambda: ProcessImage()
-                        )
+loadButton = ttk.Button(root, text='Download file', command=Process)
+
+
+play_pause_btn = tk.Button(root, text="Play", command=play_pause)
+
 
 loadButton.pack(
                 ipadx=5,
@@ -80,5 +82,14 @@ loadButton.pack(
                 side='bottom',
                 expand=False
                 )
+
+
+play_pause_btn.pack(
+                ipadx=5,
+                ipady=5,
+                side='bottom',
+                expand=False
+                )
+
 
 root.mainloop()
