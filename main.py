@@ -41,6 +41,7 @@ def Process():
     vid_player.addr = LoadFile()
 
     action = 'python yolov5/detect.py --weights yolov5/kek.pt --source %s' % vid_player.addr
+    print(action)
 
     # Detect
     os.system(action)
@@ -83,7 +84,7 @@ play_pause_btn = tk.Button(root, text="Play", command=play_pause)
 LabelBg.place(x=0, y=0)
 
 
-loadButton.place(x=53,y=455)
+loadButton.place(x=53, y=455)
 
 
 play_pause_btn.pack(
