@@ -10,7 +10,7 @@ matplotlib>=3.3
 numpy>=1.18.5
 opencv-python>=4.1.1
 Pillow>=10.0.0
-psutil  # system resources
+psutil~=5.9.0
 PyYAML>=5.3.1
 requests>=2.23.0
 scipy>=1.4.1
@@ -53,18 +53,21 @@ setuptools>=65.5.1 # Snyk vulnerability fix
 
 # deep_sort -----------------------------------
 
-easydict
+easydict~=1.10
 
 # torchreid
 
-Cython
+Cython~=3.0.0
 h5py
 six
 tb-nightly
-future
-yacs
-gdown
+future~=0.18.3
+yacs~=0.1.8
+gdown~=4.7.1
 flake8
 yapf
 isort==4.3.21
 imageio
+
+tensorflow-gpu~=2.10.1
+torchreid~=0.2.5

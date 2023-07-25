@@ -15,7 +15,7 @@ ICON_IMAGE = "resources/icon.ico"
 LOADING_GIF = "resources/loading.gif"
 
 MAIN_COLOR = "#1E1E1E"
-PATH_TO_RESULT = "yolov5/runs/detect/"
+PATH_TO_RESULT = "StrongSORT-YOLO/runs/track/"
 TIME_AWAIT = 5000
 
 
@@ -25,7 +25,8 @@ def chooseVideo():
 
 
 def detect(pathToFile: str):
-    action = f"python yolov5/detect.py --weights yolov5/kek.pt --source {pathToFile}"
+    action = f"python StrongSORT-YOLO/track_v5.py --source {pathToFile} " \
+             f"--yolo-weights StrongSORT-YOLO/thermal.pt --save-vid"
     # print(action)
     os.system(action)
 
@@ -108,7 +109,6 @@ class App(tk.Tk):
             # Get result YOLO
             lastResult = [x for x in os.walk(PATH_TO_RESULT)][-1]
             pathToDetectVideo = f"{lastResult[0]}/{lastResult[2][0]}"
-            print(pathToDetectVideo)
 
             # Hide loading elements
             self.labelLoading.place_forget()

@@ -21,7 +21,7 @@ class YamlParser(edict):
         super(YamlParser, self).__init__(cfg_dict)
 
     def merge_from_file(self, config_file):
-        with open(config_file, 'r') as fo:
+        with open(f"StrongSORT-YOLO/{config_file}", 'r') as fo:
             yaml_ = yaml.load(fo.read(), Loader=yaml.FullLoader)
             self.update(yaml_)
 
