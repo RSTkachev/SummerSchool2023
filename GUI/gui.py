@@ -99,6 +99,7 @@ class App(tk.Tk):
             self.videoPlayer.pause()
             self.btnPlay["image"] = self.imagePlay
 
+
     # Monitor for detect thread
     def monitor(self, thread):
         if thread.is_alive():
