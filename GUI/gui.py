@@ -1,15 +1,21 @@
 import os
-import tkGIF
+from GUI.tkGIF import gifplay
 from threading import Thread
 import tkinter as tk
-from time import sleep
 from tkinter import filedialog as fd
 from tkVideoPlayer import TkinterVideo
 
 APP_NAME = "Recognizer"
-BUTTON_IMG_LOAD_VIDEO = "button_image.png"
+# Paths to images
+BUTTON_IMG_LOAD_VIDEO = "resources/button_image.png"
+BG_IMAGE = "resources/bg.png"
+PLAY_IMAGE = "resources/play.png"
+PAUSE_IMAGE = "resources/pause.png"
+ICON_IMAGE = "resources/icon.ico"
+LOADING_GIF = "resources/loading.gif"
+
 MAIN_COLOR = "#1E1E1E"
-PATH_TO_RESULT = "../yolov5/runs/detect/"
+PATH_TO_RESULT = "yolov5/runs/detect/"
 TIME_AWAIT = 5000
 
 
@@ -19,7 +25,7 @@ def chooseVideo():
 
 
 def detect(pathToFile: str):
-    action = f"python ../yolov5/detect.py --weights ../yolov5/kek.pt --source {pathToFile}"
+    action = f"python yolov5/detect.py --weights yolov5/kek.pt --source {pathToFile}"
     # print(action)
     os.system(action)
 
@@ -31,13 +37,13 @@ class App(tk.Tk):
 
         # Configure the root window
         self.title(APP_NAME)
-        self.iconbitmap('icon.ico')
+        self.iconbitmap()
 
         # Images
-        self.bgImage = tk.PhotoImage(file="bg.png")
+        self.bgImage = tk.PhotoImage(file=BG_IMAGE)
         self.buttonImageLoadVideo = tk.PhotoImage(file=BUTTON_IMG_LOAD_VIDEO)
-        self.imagePlay = tk.PhotoImage(file="play.png")
-        self.imagePause = tk.PhotoImage(file="pause.png")
+        self.imagePlay = tk.PhotoImage(file=PLAY_IMAGE)
+        self.imagePause = tk.PhotoImage(file=PAUSE_IMAGE)
 
 
         # Configure MainWindow
@@ -75,16 +81,14 @@ class App(tk.Tk):
                                  command=self.PlayAndPause)
 
         # GIF
-        self.gifLoading = tkGIF.gifplay(self.labelLoading, "loading.gif", 0.1)
+        self.gifLoading = gifplay(self.labelLoading, LOADING_GIF, 0.1)
 
         # Create UI
         self.initUi()
 
     def initUi(self):
-
-        # self.labelBgImage = tk.Label(self)
+        # Create main window
         self.labelBgImage.place(x=0, y=0)
-
         self.btnLoadVideo.place(x=53, y=455)
 
     def PlayAndPause(self):
@@ -95,6 +99,8 @@ class App(tk.Tk):
             self.videoPlayer.pause()
             self.btnPlay["image"] = self.imagePlay
 
+
+    # Monitor for detect thread
     def monitor(self, thread):
         if thread.is_alive():
             self.after(TIME_AWAIT, lambda: self.monitor(thread))
@@ -114,7 +120,6 @@ class App(tk.Tk):
             # Display play button
             self.btnPlay["bg"] = MAIN_COLOR
             self.btnPlay.pack(expand=False, side=tk.BOTTOM)
-            pass
 
     def loadVideo(self):
         pathFile = chooseVideo()
@@ -141,5 +146,4 @@ class App(tk.Tk):
 
 
 if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+    print("Запуск из главного приложения")
