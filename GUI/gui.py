@@ -30,7 +30,7 @@ def detect(pathToFile: str):
     action = f"python StrongSORT-YOLO/track_v5.py --source {pathToFile} " \
              f"--yolo-weights StrongSORT-YOLO/thermal.pt --save-vid"
     # print(action)
-    # os.system(action)
+    os.system(action)
 
 
 class App(tk.Tk):
@@ -68,6 +68,7 @@ class App(tk.Tk):
         # UI ELEMENTS
         # Video player
         self.videoPlayer = TkinterVideo(self, scaled=True, bg=MAIN_COLOR)
+        self.videoPlayer.bind("<<Ended>>", self.videoEnded)
         # Label with background image
         self.labelBgImage = tk.Label(self, i=self.bgImage)
         # Label for loading screen
@@ -99,6 +100,9 @@ class App(tk.Tk):
         # Create main window
         self.labelBgImage.place(x=0, y=0)
         self.btnLoadVideo.place(x=53, y=455)
+
+    def videoEnded(self, event):
+        self.btnPlay["image"] = self.imagePlay
 
     def commandBack(self):
         self.btnBack.pack_forget()
