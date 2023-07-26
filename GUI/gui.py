@@ -12,6 +12,7 @@ BG_IMAGE = "resources/bg.png"
 PLAY_IMAGE = "resources/play.png"
 PAUSE_IMAGE = "resources/pause.png"
 ICON_IMAGE = "resources/icon.ico"
+BACK_IMAGE = "resources/back.png"
 LOADING_GIF = "resources/loading.gif"
 
 MAIN_COLOR = "#1E1E1E"
@@ -25,10 +26,11 @@ def chooseVideo():
 
 
 def detect(pathToFile: str):
+    # print(pathToFile)
     action = f"python StrongSORT-YOLO/track_v5.py --source {pathToFile} " \
              f"--yolo-weights StrongSORT-YOLO/thermal.pt --save-vid"
     # print(action)
-    os.system(action)
+    # os.system(action)
 
 
 class App(tk.Tk):
@@ -45,6 +47,7 @@ class App(tk.Tk):
         self.buttonImageLoadVideo = tk.PhotoImage(file=BUTTON_IMG_LOAD_VIDEO)
         self.imagePlay = tk.PhotoImage(file=PLAY_IMAGE)
         self.imagePause = tk.PhotoImage(file=PAUSE_IMAGE)
+        self.imageBack = tk.PhotoImage(file=BACK_IMAGE)
 
 
         # Configure MainWindow
@@ -80,6 +83,11 @@ class App(tk.Tk):
         self.btnPlay = tk.Button(self, image=self.imagePlay,
                                  relief=tk.FLAT,
                                  command=self.PlayAndPause)
+        # Button for back in main page
+        self.btnBack = tk.Button(self, image=self.imageBack,
+                                 bg="#1E1E1E",
+                                 relief=tk.FLAT,
+                                 command=self.commandBack)
 
         # GIF
         self.gifLoading = gifplay(self.labelLoading, LOADING_GIF, 0.1)
@@ -91,6 +99,13 @@ class App(tk.Tk):
         # Create main window
         self.labelBgImage.place(x=0, y=0)
         self.btnLoadVideo.place(x=53, y=455)
+
+    def commandBack(self):
+        self.btnBack.pack_forget()
+        self.videoPlayer.pack_forget()
+        self.btnPlay.pack_forget()
+        # Back main window
+        self.initUi()
 
     def PlayAndPause(self):
         if self.videoPlayer.is_paused():
@@ -119,7 +134,10 @@ class App(tk.Tk):
 
             # Display play button
             self.btnPlay["bg"] = MAIN_COLOR
-            self.btnPlay.pack(expand=False, side=tk.BOTTOM)
+            self.btnPlay.pack(expand=False)
+
+            # Display back button
+            self.btnBack.pack(expand=False, side=tk.LEFT)
 
     def loadVideo(self):
         pathFile = chooseVideo()
