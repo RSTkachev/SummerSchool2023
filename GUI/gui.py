@@ -128,10 +128,12 @@ class App(tk.Tk):
         self.progressValue.set(self.videoPlayer.current_duration())
 
     def commandBack(self):
+        # Hide elements
         self.btnBack.pack_forget()
         self.videoPlayer.pack_forget()
         self.btnPlay.pack_forget()
-        # Back main window
+        self.progressSlider.pack_forget()
+        # Display main window
         self.initUi()
 
     def PlayAndPause(self):
