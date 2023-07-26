@@ -69,6 +69,9 @@ class App(tk.Tk):
         # Video player
         self.videoPlayer = TkinterVideo(self, scaled=True, bg=MAIN_COLOR)
         self.videoPlayer.bind("<<Ended>>", self.videoEnded)
+        self.videoPlayer.bind("<<SecondChanged>>", self.updateScale)
+        self.videoPlayer.bind("<<Duration>>", self.updateDuration)
+
         # Label with background image
         self.labelBgImage = tk.Label(self, i=self.bgImage)
         # Label for loading screen
@@ -90,6 +93,14 @@ class App(tk.Tk):
                                  relief=tk.FLAT,
                                  command=self.commandBack)
 
+        # Seconds for video
+        self.progressValue = tk.IntVar(self)
+
+        # Scale for video
+        self.progressSlider = tk.Scale(self, variable=self.progressValue, bg="#BA55D3", fg="#1E1E1E", cursor="circle",
+                                       from_=0, to=0, orient="horizontal", command=self.seek)
+
+
         # GIF
         self.gifLoading = gifplay(self.labelLoading, LOADING_GIF, 0.1)
 
@@ -101,8 +112,20 @@ class App(tk.Tk):
         self.labelBgImage.place(x=0, y=0)
         self.btnLoadVideo.place(x=53, y=455)
 
+    def seek(self, value):
+        self.videoPlayer.seek(int(value))
+
+    def updateDuration(self, event):
+        """ updates the duration after finding the duration """
+        duration = self.videoPlayer.video_info()["duration"]
+        self.progressSlider["to"] = duration
+
     def videoEnded(self, event):
         self.btnPlay["image"] = self.imagePlay
+
+    def updateScale(self, event):
+        """ updates the scale value """
+        self.progressValue.set(self.videoPlayer.current_duration())
 
     def commandBack(self):
         self.btnBack.pack_forget()
@@ -135,6 +158,8 @@ class App(tk.Tk):
             # Open video player
             self.videoPlayer.load(pathToDetectVideo)
             self.videoPlayer.pack(expand=True, fill="both")
+
+            self.progressSlider.pack(expand=False, fill="x")
 
             # Display play button
             self.btnPlay["bg"] = MAIN_COLOR
