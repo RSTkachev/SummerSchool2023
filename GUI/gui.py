@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import filedialog as fd
 from tkVideoPlayer import TkinterVideo
 
-APP_NAME = "Recognizer"
+APP_NAME = "Phantom"
 # Paths to images
 BUTTON_IMG_LOAD_VIDEO = "resources/button_image.png"
 BG_IMAGE = "resources/bg.png"
@@ -40,7 +40,7 @@ class App(tk.Tk):
 
         # Configure the root window
         self.title(APP_NAME)
-        self.iconbitmap()
+        self.iconbitmap(ICON_IMAGE)
 
         # Images
         self.bgImage = tk.PhotoImage(file=BG_IMAGE)
@@ -97,7 +97,7 @@ class App(tk.Tk):
         self.progressValue = tk.IntVar(self)
 
         # Scale for video
-        self.progressSlider = tk.Scale(self, variable=self.progressValue, bg="#BA55D3", fg="#1E1E1E", cursor="circle",
+        self.progressSlider = tk.Scale(self, variable=self.progressValue, bg="#BC73D4", fg="#1E1E1E",
                                        from_=0, to=0, orient="horizontal", command=self.seek)
 
 
